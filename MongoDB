@@ -1,0 +1,46 @@
+db.createCollection("users");
+db.createCollection("vacancies");
+db.createCollection("companies");
+
+
+db.vacancies.createIndex({city: 1, companyName: 1});
+
+
+db.users.insertMany([
+    {
+        name: "John",
+        surname: "Doe",
+        email: "john.doe@example.com"
+    },
+    {
+        name: "Jane",
+        surname: "Smith",
+        email: "jane.smith@example.com"
+    }
+]);
+
+db.companies.insertOne({
+    companyName: "Acme Inc.",
+    description: "Leading tech company",
+    address: "123 Main St",
+    city: "New York"
+});
+
+db.vacancies.insertOne({
+    salary: 50000,
+    city: "New York",
+    address: "123 Main St",
+    companyName: "Acme Inc."
+});
+
+
+db.createView("user_vacancy_view", "users", [
+    {
+        $lookup: {
+            from: "vacancies",
+            localField: "_id",
+            foreignField: "companyId",
+            as: "vacancies"
+        }
+    }
+]);
